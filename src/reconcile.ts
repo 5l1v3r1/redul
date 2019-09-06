@@ -3,7 +3,8 @@ import { ENOUGH_TIME } from './constants'
 import dispatcher from './dispatcher'
 import { isComponent } from './utils'
 import { transformElementInputsToElements } from './element'
-import { EffectTag, FiberNodeTag, FiberNode, ElementInput, FunctionComponent, Element } from '../reax'
+import { FiberNode, ElementInput, FunctionComponent, Element } from '../reax'
+import { EffectTag, FiberNodeTag } from '../interface'
 
 const taskQueue: FiberNode[] = []
 

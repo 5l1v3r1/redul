@@ -1,5 +1,5 @@
 import { ROOT_FIBER_NODE } from "./src/constants"
-import { FiberNodeTag, EffectTag } from "./reax"
+import { FiberNodeTag, EffectTag } from "./interface"
 
 export = Reax
 export as namespace Reax

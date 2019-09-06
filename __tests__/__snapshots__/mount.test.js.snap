@@ -1,0 +1,591 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fiber reconcile test mount stage element function type 1`] = `
+Object {
+  "alternate": null,
+  "child": Object {
+    "alternate": null,
+    "child": Object {
+      "alternate": null,
+      "child": Object {
+        "alternate": null,
+        "children": Array [],
+        "effectTag": 1,
+        "effects": Array [],
+        "parent": [Circular],
+        "props": Object {
+          "children": Array [],
+          "nodeValue": 1,
+        },
+        "statNode": null,
+        "tag": 1,
+        "type": "@@reax/text-node",
+      },
+      "children": Array [
+        Object {
+          "children": Array [],
+          "props": Object {
+            "children": Array [],
+            "nodeValue": 1,
+          },
+          "type": "@@reax/text-node",
+        },
+      ],
+      "effectTag": 1,
+      "effects": Array [
+        Object {
+          "alternate": null,
+          "children": Array [],
+          "effectTag": 1,
+          "effects": Array [],
+          "parent": [Circular],
+          "props": Object {
+            "children": Array [],
+            "nodeValue": 1,
+          },
+          "statNode": null,
+          "tag": 1,
+          "type": "@@reax/text-node",
+        },
+      ],
+      "parent": [Circular],
+      "props": Object {
+        "children": Array [
+          Object {
+            "children": Array [],
+            "props": Object {
+              "children": Array [],
+              "nodeValue": 1,
+            },
+            "type": "@@reax/text-node",
+          },
+        ],
+      },
+      "statNode": null,
+      "tag": 1,
+      "type": "div",
+    },
+    "children": Array [],
+    "effectTag": 1,
+    "effects": Array [
+      Object {
+        "alternate": null,
+        "child": Object {
+          "alternate": null,
+          "children": Array [],
+          "effectTag": 1,
+          "effects": Array [],
+          "parent": [Circular],
+          "props": Object {
+            "children": Array [],
+            "nodeValue": 1,
+          },
+          "statNode": null,
+          "tag": 1,
+          "type": "@@reax/text-node",
+        },
+        "children": Array [
+          Object {
+            "children": Array [],
+            "props": Object {
+              "children": Array [],
+              "nodeValue": 1,
+            },
+            "type": "@@reax/text-node",
+          },
+        ],
+        "effectTag": 1,
+        "effects": Array [
+          Object {
+            "alternate": null,
+            "children": Array [],
+            "effectTag": 1,
+            "effects": Array [],
+            "parent": [Circular],
+            "props": Object {
+              "children": Array [],
+              "nodeValue": 1,
+            },
+            "statNode": null,
+            "tag": 1,
+            "type": "@@reax/text-node",
+          },
+        ],
+        "parent": [Circular],
+        "props": Object {
+          "children": Array [
+            Object {
+              "children": Array [],
+              "props": Object {
+                "children": Array [],
+                "nodeValue": 1,
+              },
+              "type": "@@reax/text-node",
+            },
+          ],
+        },
+        "statNode": null,
+        "tag": 1,
+        "type": "div",
+      },
+      Object {
+        "alternate": null,
+        "children": Array [],
+        "effectTag": 1,
+        "effects": Array [],
+        "parent": Object {
+          "alternate": null,
+          "child": [Circular],
+          "children": Array [
+            Object {
+              "children": Array [],
+              "props": Object {
+                "children": Array [],
+                "nodeValue": 1,
+              },
+              "type": "@@reax/text-node",
+            },
+          ],
+          "effectTag": 1,
+          "effects": Array [
+            [Circular],
+          ],
+          "parent": [Circular],
+          "props": Object {
+            "children": Array [
+              Object {
+                "children": Array [],
+                "props": Object {
+                  "children": Array [],
+                  "nodeValue": 1,
+                },
+                "type": "@@reax/text-node",
+              },
+            ],
+          },
+          "statNode": null,
+          "tag": 1,
+          "type": "div",
+        },
+        "props": Object {
+          "children": Array [],
+          "nodeValue": 1,
+        },
+        "statNode": null,
+        "tag": 1,
+        "type": "@@reax/text-node",
+      },
+    ],
+    "parent": [Circular],
+    "props": Object {
+      "children": Array [],
+      "count": 1,
+    },
+    "statNode": null,
+    "tag": 3,
+    "type": [Function],
+  },
+  "children": Array [
+    Object {
+      "children": Array [],
+      "props": Object {
+        "children": Array [],
+        "count": 1,
+      },
+      "type": [Function],
+    },
+  ],
+  "effects": Array [
+    Object {
+      "alternate": null,
+      "child": Object {
+        "alternate": null,
+        "child": Object {
+          "alternate": null,
+          "children": Array [],
+          "effectTag": 1,
+          "effects": Array [],
+          "parent": [Circular],
+          "props": Object {
+            "children": Array [],
+            "nodeValue": 1,
+          },
+          "statNode": null,
+          "tag": 1,
+          "type": "@@reax/text-node",
+        },
+        "children": Array [
+          Object {
+            "children": Array [],
+            "props": Object {
+              "children": Array [],
+              "nodeValue": 1,
+            },
+            "type": "@@reax/text-node",
+          },
+        ],
+        "effectTag": 1,
+        "effects": Array [
+          Object {
+            "alternate": null,
+            "children": Array [],
+            "effectTag": 1,
+            "effects": Array [],
+            "parent": [Circular],
+            "props": Object {
+              "children": Array [],
+              "nodeValue": 1,
+            },
+            "statNode": null,
+            "tag": 1,
+            "type": "@@reax/text-node",
+          },
+        ],
+        "parent": [Circular],
+        "props": Object {
+          "children": Array [
+            Object {
+              "children": Array [],
+              "props": Object {
+                "children": Array [],
+                "nodeValue": 1,
+              },
+              "type": "@@reax/text-node",
+            },
+          ],
+        },
+        "statNode": null,
+        "tag": 1,
+        "type": "div",
+      },
+      "children": Array [],
+      "effectTag": 1,
+      "effects": Array [
+        Object {
+          "alternate": null,
+          "child": Object {
+            "alternate": null,
+            "children": Array [],
+            "effectTag": 1,
+            "effects": Array [],
+            "parent": [Circular],
+            "props": Object {
+              "children": Array [],
+              "nodeValue": 1,
+            },
+            "statNode": null,
+            "tag": 1,
+            "type": "@@reax/text-node",
+          },
+          "children": Array [
+            Object {
+              "children": Array [],
+              "props": Object {
+                "children": Array [],
+                "nodeValue": 1,
+              },
+              "type": "@@reax/text-node",
+            },
+          ],
+          "effectTag": 1,
+          "effects": Array [
+            Object {
+              "alternate": null,
+              "children": Array [],
+              "effectTag": 1,
+              "effects": Array [],
+              "parent": [Circular],
+              "props": Object {
+                "children": Array [],
+                "nodeValue": 1,
+              },
+              "statNode": null,
+              "tag": 1,
+              "type": "@@reax/text-node",
+            },
+          ],
+          "parent": [Circular],
+          "props": Object {
+            "children": Array [
+              Object {
+                "children": Array [],
+                "props": Object {
+                  "children": Array [],
+                  "nodeValue": 1,
+                },
+                "type": "@@reax/text-node",
+              },
+            ],
+          },
+          "statNode": null,
+          "tag": 1,
+          "type": "div",
+        },
+        Object {
+          "alternate": null,
+          "children": Array [],
+          "effectTag": 1,
+          "effects": Array [],
+          "parent": Object {
+            "alternate": null,
+            "child": [Circular],
+            "children": Array [
+              Object {
+                "children": Array [],
+                "props": Object {
+                  "children": Array [],
+                  "nodeValue": 1,
+                },
+                "type": "@@reax/text-node",
+              },
+            ],
+            "effectTag": 1,
+            "effects": Array [
+              [Circular],
+            ],
+            "parent": [Circular],
+            "props": Object {
+              "children": Array [
+                Object {
+                  "children": Array [],
+                  "props": Object {
+                    "children": Array [],
+                    "nodeValue": 1,
+                  },
+                  "type": "@@reax/text-node",
+                },
+              ],
+            },
+            "statNode": null,
+            "tag": 1,
+            "type": "div",
+          },
+          "props": Object {
+            "children": Array [],
+            "nodeValue": 1,
+          },
+          "statNode": null,
+          "tag": 1,
+          "type": "@@reax/text-node",
+        },
+      ],
+      "parent": [Circular],
+      "props": Object {
+        "children": Array [],
+        "count": 1,
+      },
+      "statNode": null,
+      "tag": 3,
+      "type": [Function],
+    },
+    Object {
+      "alternate": null,
+      "child": Object {
+        "alternate": null,
+        "children": Array [],
+        "effectTag": 1,
+        "effects": Array [],
+        "parent": [Circular],
+        "props": Object {
+          "children": Array [],
+          "nodeValue": 1,
+        },
+        "statNode": null,
+        "tag": 1,
+        "type": "@@reax/text-node",
+      },
+      "children": Array [
+        Object {
+          "children": Array [],
+          "props": Object {
+            "children": Array [],
+            "nodeValue": 1,
+          },
+          "type": "@@reax/text-node",
+        },
+      ],
+      "effectTag": 1,
+      "effects": Array [
+        Object {
+          "alternate": null,
+          "children": Array [],
+          "effectTag": 1,
+          "effects": Array [],
+          "parent": [Circular],
+          "props": Object {
+            "children": Array [],
+            "nodeValue": 1,
+          },
+          "statNode": null,
+          "tag": 1,
+          "type": "@@reax/text-node",
+        },
+      ],
+      "parent": Object {
+        "alternate": null,
+        "child": [Circular],
+        "children": Array [],
+        "effectTag": 1,
+        "effects": Array [
+          [Circular],
+          Object {
+            "alternate": null,
+            "children": Array [],
+            "effectTag": 1,
+            "effects": Array [],
+            "parent": [Circular],
+            "props": Object {
+              "children": Array [],
+              "nodeValue": 1,
+            },
+            "statNode": null,
+            "tag": 1,
+            "type": "@@reax/text-node",
+          },
+        ],
+        "parent": [Circular],
+        "props": Object {
+          "children": Array [],
+          "count": 1,
+        },
+        "statNode": null,
+        "tag": 3,
+        "type": [Function],
+      },
+      "props": Object {
+        "children": Array [
+          Object {
+            "children": Array [],
+            "props": Object {
+              "children": Array [],
+              "nodeValue": 1,
+            },
+            "type": "@@reax/text-node",
+          },
+        ],
+      },
+      "statNode": null,
+      "tag": 1,
+      "type": "div",
+    },
+    Object {
+      "alternate": null,
+      "children": Array [],
+      "effectTag": 1,
+      "effects": Array [],
+      "parent": Object {
+        "alternate": null,
+        "child": [Circular],
+        "children": Array [
+          Object {
+            "children": Array [],
+            "props": Object {
+              "children": Array [],
+              "nodeValue": 1,
+            },
+            "type": "@@reax/text-node",
+          },
+        ],
+        "effectTag": 1,
+        "effects": Array [
+          [Circular],
+        ],
+        "parent": Object {
+          "alternate": null,
+          "child": [Circular],
+          "children": Array [],
+          "effectTag": 1,
+          "effects": Array [
+            [Circular],
+            [Circular],
+          ],
+          "parent": [Circular],
+          "props": Object {
+            "children": Array [],
+            "count": 1,
+          },
+          "statNode": null,
+          "tag": 3,
+          "type": [Function],
+        },
+        "props": Object {
+          "children": Array [
+            Object {
+              "children": Array [],
+              "props": Object {
+                "children": Array [],
+                "nodeValue": 1,
+              },
+              "type": "@@reax/text-node",
+            },
+          ],
+        },
+        "statNode": null,
+        "tag": 1,
+        "type": "div",
+      },
+      "props": Object {
+        "children": Array [],
+        "nodeValue": 1,
+      },
+      "statNode": null,
+      "tag": 1,
+      "type": "@@reax/text-node",
+    },
+  ],
+  "statNode": <div
+    id="root"
+  />,
+  "tag": 2,
+}
+`;
+
+exports[`fiber reconcile test mount stage element string type 1`] = `
+Object {
+  "alternate": null,
+  "child": Object {
+    "alternate": null,
+    "children": Array [],
+    "effectTag": 1,
+    "effects": Array [],
+    "parent": [Circular],
+    "props": Object {
+      "children": Array [],
+      "className": "test",
+    },
+    "statNode": null,
+    "tag": 1,
+    "type": "div",
+  },
+  "children": Array [
+    Object {
+      "children": Array [],
+      "props": Object {
+        "children": Array [],
+        "className": "test",
+      },
+      "type": "div",
+    },
+  ],
+  "effects": Array [
+    Object {
+      "alternate": null,
+      "children": Array [],
+      "effectTag": 1,
+      "effects": Array [],
+      "parent": [Circular],
+      "props": Object {
+        "children": Array [],
+        "className": "test",
+      },
+      "statNode": null,
+      "tag": 1,
+      "type": "div",
+    },
+  ],
+  "statNode": <div
+    id="root"
+  />,
+  "tag": 2,
+}
+`;
