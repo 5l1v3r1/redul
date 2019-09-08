@@ -42,8 +42,10 @@ declare namespace Reax {
         effects: FiberNode[]
 
         // other
-        statNode: HTMLElement | RootHTMLElementWithFiberNode | null
+        statNode: HTMLElementOrText | RootHTMLElementWithFiberNode | null
     }
+
+    type HTMLElementOrText = HTMLElement | Text
 
     interface RootHTMLElementWithFiberNode extends HTMLElement {
         [ROOT_FIBER_NODE]?: FiberNode

@@ -9,6 +9,6 @@ export function createRootFiberNode(element: ElementInput | ElementInput[], stat
         children: transformElementInputsToElements(element),
         effects: [],
         statNode,
-        alternate: statNode[ROOT_FIBER_NODE] || null
+        alternate: null
     }
 }

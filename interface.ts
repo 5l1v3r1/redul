@@ -7,7 +7,7 @@ export enum EffectTag {
 }
 
 export enum FiberNodeTag {
-    HOST_NODE = 1,
-    HOST_ROOT_NODE,
+    HOST_ROOT_NODE = 1,
+    HOST_NODE,
     COMPONENT_NODE
 }

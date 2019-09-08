@@ -1,4 +1,5 @@
 import { render, createElement as h } from '../src'
+import { ROOT_FIBER_NODE } from '../src/constants'
 
 const getRootNode = () => {
     document.body.innerHTML = '<div id="root"></div>'
@@ -11,14 +12,30 @@ describe('fiber reconcile test', () => {
     describe('mount stage', () => {
         test('element string type', () => {
 
-            expect(render(<div className="test"></div>, $root)).toMatchSnapshot()
+            render(<div className="test" style={{color: 'red'}}></div>, $root)
+            expect($root).toMatchSnapshot()
         })
 
         test('element function type', () => {
             function Count({ count }) {
                 return <div>{count}</div>
             }
-            expect(render(<Count count={1} />, $root)).toMatchSnapshot()
+
+            render(<Count count={1} />, $root)
+            expect($root).toMatchSnapshot()
+        })
+
+        test('element complex function type', () => {
+            function App() {
+                return <div><Count count={1} /></div>
+            }
+
+            function Count({ count }) {
+                return <span>{count}</span>
+            }
+
+            render(<App />, $root)
+            expect($root).toMatchSnapshot()
         })
     })
 })

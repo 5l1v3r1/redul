@@ -1,9 +1,9 @@
 import { createRootFiberNode } from './fiber'
-import { ENOUGH_TIME } from './constants'
+import { ENOUGH_TIME, ROOT_FIBER_NODE } from './constants'
 import dispatcher from './dispatcher'
 import { isComponent } from './utils'
 import { transformElementInputsToElements } from './element'
-import { FiberNode, ElementInput, FunctionComponent, Element } from '../reax'
+import { FiberNode, ElementInput, FunctionComponent, Element, RootHTMLElementWithFiberNode } from '../reax'
 import { EffectTag, FiberNodeTag } from '../interface'
 
 const taskQueue: FiberNode[] = []
@@ -17,13 +17,15 @@ const requestIdleCallback = (callback: (deadline: RequestIdleCallbackDeadline) =
 let nextUnitWork: FiberNode | null = null
 let currentRootFiberNode: FiberNode | null = null
 
-export function render(element: ElementInput, statNode: HTMLElement) {
-    const rootFiberNode = createRootFiberNode(element, statNode)
+export function render(element: ElementInput, containerDom: HTMLElement) {
+    // clear all before render
+    dispatcher.clearDomContent(containerDom)
+    const rootFiberNode = createRootFiberNode(element, containerDom)
     currentRootFiberNode = rootFiberNode
     taskQueue.push(rootFiberNode)
 
     requestIdleCallback(performWork)
-    return currentRootFiberNode
+    return containerDom
 }
 
 function performWork(deadline: RequestIdleCallbackDeadline) {
@@ -48,6 +50,8 @@ function resolveNextUnitWork() {
 
 function commitAllWork() {
     if (currentRootFiberNode) {
+        // save root fiber
+        (currentRootFiberNode.statNode as RootHTMLElementWithFiberNode)[ROOT_FIBER_NODE] = currentRootFiberNode
         dispatcher.render(currentRootFiberNode)
     }
 }
