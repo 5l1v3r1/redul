@@ -38,16 +38,24 @@ declare namespace Reax {
         sibling?: FiberNode | null
 
         // effect
-        effectTag?: EffectTag
+        effectTag?: EffectTag | null
         effects: FiberNode[]
 
         // other
         statNode: HTMLElementOrText | RootHTMLElementWithFiberNode | null
+        hooks?: Hook | null
+        isPartialStateChanged?: boolean
     }
 
     type HTMLElementOrText = HTMLElement | Text
 
     interface RootHTMLElementWithFiberNode extends HTMLElement {
-        [ROOT_FIBER_NODE]?: FiberNode
+        [ROOT_FIBER_NODE]?: FiberNode |
+    }
+
+    interface Hook<S = any> {
+        memoizedState: S | null,
+        dispatch: ((newState: S) => void) | null
+        next: Hook | null
     }
 }

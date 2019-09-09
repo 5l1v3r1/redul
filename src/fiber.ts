@@ -12,3 +12,13 @@ export function createRootFiberNode(element: ElementInput | ElementInput[], stat
         alternate: null
     }
 }
+
+export function createWorkInProgressRootFiberNode(fiberNode: FiberNode) {
+    return {
+        tag: FiberNodeTag.HOST_ROOT_NODE,
+        children: fiberNode.children,
+        effects: [],
+        statNode: fiberNode.statNode,
+        alternate: fiberNode
+    }
+}
