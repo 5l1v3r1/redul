@@ -1,20 +1,16 @@
 # Reax
-Reax is an simple and fast React alternative only with hooks and fiber.
+An simple and fast React alternative with hooks and fiber (Excluded class-component).
 
-## Target
+## Advantages
 - same hooks api with react
-- reconcile with fiber
-- written in typescript
-- keep simple
+- simple code to read
+- written with typescript
+- small size
 
-## Packages
-- reax: the core package to expose same api as react
-- reax-dom: the renderer of dom
-
-## reax
-the apis which reax implement
-- createElement
+## Hooks
 - useState
-- useReduce
+- useReducer
+- useEffect
 - useCallback
 - useMemo
+- useRef
