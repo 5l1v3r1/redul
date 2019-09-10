@@ -1,23 +1,26 @@
-import { Hook, FiberNode } from "../reax";
+import { Hook, FiberNode, HookEffect } from "../reax";
 import { update } from './reconcile'
-
-// hook {
-//     memoziedState, ✅
-//     baseState, ✅
-//     queue,
-//     baseUpdate,
-//     next, ✅
-// }
 
 let workInProgressHook: Hook | null = null
 let workInProgressFiberNode: FiberNode | null = null
+
+let componentUpdateQueue: HookEffect[] = []
 
 export function setWorkInProgressFiberNode(fiberNode: FiberNode) {
     workInProgressFiberNode = fiberNode
 }
 
 export function resetWorkInProgressHook() {
+    if (workInProgressFiberNode) {
+        // mark component fiber as mounted
+        workInProgressFiberNode.updateQueue = componentUpdateQueue
+    }
     workInProgressHook = null
+    componentUpdateQueue = []
+}
+
+function isHookOnUpdateStage() {
+    return !!(workInProgressFiberNode && workInProgressFiberNode.isMount)
 }
 
 function mountWorkInProgressHook<S>() {
@@ -32,14 +35,16 @@ function mountWorkInProgressHook<S>() {
         workInProgressHook = hook
         // save in work-in-progress fiber
         if (workInProgressFiberNode) {
-            workInProgressFiberNode.hooks = hook
+            workInProgressFiberNode.hooks = workInProgressHook
         }
     } else {
         workInProgressHook.next = hook
+        workInProgressHook = workInProgressHook.next
     }
 
     return hook
 }
+
 
 function updateWorkInProgressHook<S>() {
     // hooks never be null
@@ -49,6 +54,7 @@ function updateWorkInProgressHook<S>() {
     } else {
         hook = workInProgressHook.next!
     }
+    workInProgressHook = hook
 
     return hook
 }
@@ -57,17 +63,75 @@ function isInitStateFunc<S>(initState: S | (() => S)): initState is () => S {
     return typeof initState === 'function'
 }
 
-function mountUseState<S>(initState: S | (() => S)): [S, (newState: S) => void] {
-    const hook = mountWorkInProgressHook<S>()
-    hook.memoizedState = isInitStateFunc(initState) ? initState() : initState
-    hook.next = hook
-    hook.dispatch = (newState: S) => dispatchAction(hook, workInProgressFiberNode, newState)
-    return [hook.memoizedState, hook.dispatch]
+function baseReducer<S, A>(state: S, action: A) {
+    return typeof action === 'function' ? action(state) : action
 }
 
-function updateUseState<S>(initState: S | (() => S)): [S | null, ((newState: S) => void) | null] {
+// useState
+function mountUseState<S>(initState: S | (() => S)): [S, (newState: S) => void] {
+    const calcInitState = isInitStateFunc(initState) ? initState() : initState
+    return mountUseReducer(baseReducer, calcInitState)
+}
+
+function updateUseState<S>(): [S | null, ((newState: S) => void) | null] {
+    return updateUseReducer(baseReducer)
+}
+
+// useReducer
+function mountUseReducer<S, A>(reducer: (state: S, action: A) => S, initState: S): [S, (action: A) => void] {
+    const hook = mountWorkInProgressHook<S>()
+    const memoizedState = hook.memoizedState = initState
+    const currentFiberNode = workInProgressFiberNode
+    const dispatch =  hook.dispatch = (action: A) => dispatchAction(hook, currentFiberNode, reducer(initState, action))
+    return [memoizedState, dispatch]
+}
+
+function updateUseReducer<S, A>(reducer: (state: S, action: A) => S): [S | null, (action: A) => void] {
     const hook = updateWorkInProgressHook<S>()
-    return [hook.memoizedState, hook.dispatch]
+    const currentFiberNode = workInProgressFiberNode
+    const dispatch = hook.dispatch = (action: A) => dispatchAction(hook, currentFiberNode, reducer(hook.memoizedState as S, action))
+    return [hook.memoizedState, dispatch]
+}
+
+// useEffect
+function mountUseEffect(create: () => (() => void) | void, deps?: any[]) {
+    const hook = mountWorkInProgressHook<HookEffect>()
+    const nextDeps = deps === undefined ? null : deps
+    hook.memoizedState = pushHookEffect(create, null, nextDeps)
+}
+
+function updateUseEffect(create: () => (() => void) | void, deps?: any[]) {
+    const hook = updateWorkInProgressHook<HookEffect>()
+    const nextDeps = deps === undefined ? null : deps
+    const hookEffect: HookEffect | null = hook.memoizedState
+    const prevDeps = hookEffect && hookEffect.deps || null
+
+    if (!isEqualDeps(prevDeps, nextDeps)) {
+        const destroy = hookEffect && hookEffect.destroy || null
+        hook.memoizedState = pushHookEffect(create, destroy, nextDeps)
+    }
+}
+
+function isEqualDeps(prevDeps: any[] | null, nextDeps: any[] | null) {
+    prevDeps = prevDeps || []
+    nextDeps = nextDeps || []
+    for (let i = 0; i < Math.min(prevDeps.length, nextDeps.length); i++) {
+        if (Object.is(prevDeps[i], nextDeps[i])) {
+            continue
+        }
+        return false
+    }
+    return true
+}
+
+function pushHookEffect(create: () => (() => void) | void, destroy: (() => void) | null, deps: any[] | null) {
+    const effect: HookEffect = {
+        create,
+        destroy,
+        deps
+    }
+    componentUpdateQueue.push(effect)
+    return effect
 }
 
 function dispatchAction<S>(hook: Hook<S>, fiberNode: FiberNode | null, newState: S) {
@@ -78,14 +142,32 @@ function dispatchAction<S>(hook: Hook<S>, fiberNode: FiberNode | null, newState:
 }
 
 function useState<S>(initState: S) {
-    if (workInProgressFiberNode && workInProgressFiberNode.hooks) {
-        return updateUseState(initState)
+    if (isHookOnUpdateStage()) {
+        return updateUseState()
     }
 
     return mountUseState(initState)
 }
 
+function useReducer<S, A>(reducer: (state: S, action: A) => S, initState: S) {
+    if (isHookOnUpdateStage()) {
+        return updateUseReducer(reducer)
+    }
+
+    return mountUseReducer(reducer, initState)
+}
+
+function useEffect(create: () => (() => void) | void, deps?: any[]) {
+    if (isHookOnUpdateStage()) {
+        return updateUseEffect(create, deps)
+    }
+
+    return mountUseEffect(create, deps)
+}
+
 
 export {
-    useState
+    useState,
+    useReducer,
+    useEffect
 }

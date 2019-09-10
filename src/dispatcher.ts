@@ -8,12 +8,15 @@ const computeEventName = (key: string) => key.replace(/^on/, '').toLowerCase() a
 const dispatcher = {
     render: (rootFiberNode: Reax.FiberNode) => {
         const effects = rootFiberNode.effects
+        // console.log('render', effects.map(item => ([item.type, item.effectTag])))
 
         for (let i = 0; i < effects.length; i++) {
             const fiberNode = effects[i]
             const parentDom = getNearestParentDom(fiberNode)
             if (parentDom) {
                 resolveFiberNode(fiberNode, parentDom)
+                // reset effectTag
+                fiberNode.effectTag = null
             }
         }
     },
@@ -43,11 +46,15 @@ function resolveFiberNode(fiberNode: FiberNode, parentDomNode: HTMLElementOrText
 }
 
 function resolveComponentFiberNode(fiberNode: FiberNode, parentDomNode: HTMLElementOrText) {
-
+    // do nothing
 }
 
 function resolveHostFiberNode(fiberNode: FiberNode, parentDomNode: HTMLElementOrText) {
     const effectTag = fiberNode.effectTag
+    if (!effectTag) {
+        return
+    }
+
     const oldDomNode = fiberNode.statNode
 
     if (effectTag === EffectTag.ADD) {
@@ -100,7 +107,6 @@ function attachDomNodeAttrsAndEvents(domNode: HTMLElementOrText, props: ElementP
         const eventValue = events[eventName]
         domNode.addEventListener(eventName, eventValue)
     }
-
 
     for (let attrName in attrs) {
         const nameAndValue = selectAttrNameAndValue(attrName, attrs[attrName])

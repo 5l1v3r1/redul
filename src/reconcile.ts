@@ -7,7 +7,7 @@ import { FiberNode, ElementInput, FunctionComponent, Element, RootHTMLElementWit
 import { EffectTag, FiberNodeTag } from '../interface'
 import { setWorkInProgressFiberNode, resetWorkInProgressHook } from './hook'
 
-const taskQueue: FiberNode[] = []
+let taskQueue: FiberNode[] = []
 
 const requestIdleCallback = (callback: (deadline: RequestIdleCallbackDeadline) => void) => {
     callback({
@@ -18,11 +18,12 @@ const requestIdleCallback = (callback: (deadline: RequestIdleCallbackDeadline) =
 let nextUnitWork: FiberNode | null = null
 let workInProgressRootFiberNode: FiberNode | null = null
 
+// TODO: merge effects
+
 export function render(element: ElementInput, containerDom: HTMLElement) {
     // clear all before render
     dispatcher.clearDomContent(containerDom)
     const rootFiberNode = createRootFiberNode(element, containerDom)
-    workInProgressRootFiberNode = rootFiberNode
     taskQueue.push(rootFiberNode)
 
     requestIdleCallback(performWork)
@@ -34,17 +35,17 @@ export function update(fiberNode: FiberNode) {
     const oldRootFiberNode = workInProgressRootFiberNode
     if (oldRootFiberNode) {
         const rootFiberNode = createWorkInProgressRootFiberNode(oldRootFiberNode)
-        // update work-in-progress root fiber
-        workInProgressRootFiberNode = rootFiberNode
         taskQueue.push(rootFiberNode)
 
-        requestIdleCallback(performWork)
+        // when no task in process, start work
+        if (!nextUnitWork) {
+            requestIdleCallback(performWork)
+        }
     }
 }
 
 function performWork(deadline: RequestIdleCallbackDeadline) {
     nextUnitWork = resolveNextUnitWork()
-
     if (!nextUnitWork) {
         commitAllWork()
         return
@@ -58,8 +59,23 @@ function performWork(deadline: RequestIdleCallbackDeadline) {
 }
 
 function resolveNextUnitWork() {
-    nextUnitWork = nextUnitWork || taskQueue.shift() || null
+    nextUnitWork = nextUnitWork || flushTaskQueue() || null
+
+    // update work-in-progress root fiber
+    if (nextUnitWork && nextUnitWork.tag === FiberNodeTag.HOST_ROOT_NODE) {
+        workInProgressRootFiberNode = nextUnitWork
+    }
+
     return nextUnitWork
+}
+
+function flushTaskQueue() {
+    // flush taskQueue and use last task as next task
+    // all the current tasks should be merge as one task because they has same root fiber node
+    const task = taskQueue.shift()
+    taskQueue.length = 0
+
+    return task
 }
 
 function commitAllWork() {
@@ -101,14 +117,16 @@ function beginComponentNodeUnitWork(fiberNode: FiberNode) {
     const Component = fiberNode.type as FunctionComponent
     const alternateFiberNode = fiberNode.alternate
 
-    if (alternateFiberNode && !alternateFiberNode.isPartialStateChanged) {
+    // TODO: judge props whether equal
+    if (alternateFiberNode && alternateFiberNode.props === fiberNode.props && !alternateFiberNode.isPartialStateChanged) {
         cloneChildFiberNodes(fiberNode)
         // reset update tag
-        fiberNode.isPartialStateChanged = false
+        alternateFiberNode.isPartialStateChanged = false
     } else {
         // set work-in-progress fiber to use in hooks
         setWorkInProgressFiberNode(fiberNode)
         const children = transformElementInputsToElements(Component(fiberNode.props))
+        fiberNode.isMount = true
         resetWorkInProgressHook()
         reconcileChildren(children, fiberNode)
     }
@@ -121,11 +139,10 @@ function cloneChildFiberNodes(parentFiberNode: FiberNode) {
     while (oldFiberNode != null) {
         const newFiberNode = {
             ...oldFiberNode,
+            // update effect tag
+            effectTag: mergeEffectTag(EffectTag.NOTHING, oldFiberNode),
             alternate: oldFiberNode,
             parent: parentFiberNode,
-            // reset effect
-            effects: [],
-            effectTag: null
         }
 
         if (prevFiberNode === null) {
@@ -162,11 +179,12 @@ function reconcileChildren(children: Element[], fiberNode: FiberNode) {
         childFiberNode.parent = fiberNode
         childFiberNode.alternate = alternateChildFiberNode || null
         childFiberNode.statNode = alternateChildFiberNode && alternateChildFiberNode.statNode || null
+        childFiberNode.isMount = alternateChildFiberNode && alternateChildFiberNode.isMount || false
         // copy hooks
         childFiberNode.hooks = alternateChildFiberNode && alternateChildFiberNode.hooks || null
-        // reset effect
-        childFiberNode.effects = []
-        childFiberNode.effectTag = resolveFiberNodeEffectTag(childElement, alternateChildFiberNode)
+
+        const effectTag = resolveEffectTag(childElement, alternateChildFiberNode)
+        childFiberNode.effectTag = mergeEffectTag(effectTag, alternateChildFiberNode)
 
         prevChildFiberNode = childFiberNode
     }
@@ -186,9 +204,13 @@ function transformElementToFiberNode(element: Element): FiberNode {
     return fiberNode
 }
 
-function resolveFiberNodeEffectTag(element: Element, alternateFiberNode: FiberNode | null): EffectTag {
+function resolveEffectTag(element: Element, alternateFiberNode: FiberNode | null): EffectTag {
+    // TODO: EffectTag no work
     if (alternateFiberNode) {
         if (element.type === alternateFiberNode.type) {
+            if (element.props === alternateFiberNode.props) {
+                return EffectTag.NOTHING
+            }
             return EffectTag.UPDATE
         } else {
             return EffectTag.REPLACE
@@ -196,6 +218,21 @@ function resolveFiberNodeEffectTag(element: Element, alternateFiberNode: FiberNo
     }
 
     return EffectTag.ADD
+}
+
+function mergeEffectTag(currentEffectTag: EffectTag, alternateFiberNode: FiberNode | null): EffectTag | null {
+    // merge effect if alternateFiberNode has effectTag
+    // all effectTag will be reset after render
+    // so if there any effectTag in alternateFiberNode, we should merge it with currentTag
+    const oldEffectTag = alternateFiberNode && alternateFiberNode.effectTag || null
+    if (!oldEffectTag) {
+        return currentEffectTag
+    }
+
+    if (alternateFiberNode) {
+        alternateFiberNode.effectTag = EffectTag.NOTHING
+    }
+    return Math.max(currentEffectTag, oldEffectTag)
 }
 
 function resolveAlternateFiberNodesAsRemoveEffectTag(alternateFiberNode: FiberNode | null, fiberNode: FiberNode) {
@@ -208,10 +245,32 @@ function resolveAlternateFiberNodesAsRemoveEffectTag(alternateFiberNode: FiberNo
 function completeUnitWork(fiberNode: FiberNode) {
     const parentFiberNode = fiberNode.parent
     const effects = fiberNode.effects
+
+    // commit hooks
+    commitUnitWorkHooks(fiberNode)
+
     if (parentFiberNode) {
         if (fiberNode.effectTag) {
             parentFiberNode.effects.push(fiberNode)
         }
         parentFiberNode.effects.push(...effects)
+        // reset effects
+        fiberNode.effects = []
     }
+}
+
+function commitUnitWorkHooks(fiberNode: FiberNode) {
+    const updateQueue = fiberNode.updateQueue || []
+    // reset updateQueue
+    for (let i = 0; i < updateQueue.length; i++) {
+        const hookEffect = updateQueue[i]
+        const { create, destroy } = hookEffect
+        if (destroy) {
+            destroy()
+        }
+        if (create) {
+            hookEffect.destroy = create() || null
+        }
+    }
+    fiberNode.updateQueue = []
 }

@@ -45,6 +45,8 @@ declare namespace Reax {
         statNode: HTMLElementOrText | RootHTMLElementWithFiberNode | null
         hooks?: Hook | null
         isPartialStateChanged?: boolean
+        updateQueue?: HookEffect[]
+        isMount?: boolean
     }
 
     type HTMLElementOrText = HTMLElement | Text
@@ -53,9 +55,15 @@ declare namespace Reax {
         [ROOT_FIBER_NODE]?: FiberNode |
     }
 
-    interface Hook<S = any> {
+    interface Hook<S = any, A = any> {
         memoizedState: S | null,
-        dispatch: ((newState: S) => void) | null
+        dispatch: ((action: A) => void) | null
         next: Hook | null
+    }
+
+    interface HookEffect {
+        create: () => (() => void) | void
+        destroy?: (() => void) | null
+        deps: any[] | null
     }
 }

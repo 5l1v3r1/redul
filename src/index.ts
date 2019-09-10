@@ -1,9 +1,11 @@
 import { createElement } from './element'
 import { render } from './reconcile'
-import { useState } from './hook'
+import { useState, useReducer, useEffect } from './hook'
 
 export {
     createElement,
     render,
-    useState
+    useState,
+    useReducer,
+    useEffect
 }

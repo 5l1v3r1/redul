@@ -1,9 +1,10 @@
 // fiber effect
 export enum EffectTag {
-    ADD = 1,
+    NOTHING,
+    UPDATE,
     REPLACE,
-    REMOVE,
-    UPDATE
+    ADD,
+    REMOVE
 }
 
 export enum FiberNodeTag {

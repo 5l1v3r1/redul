@@ -1,4 +1,4 @@
-import { render, createElement as h, useState } from '../src'
+import { render, createElement as h, useState, useReducer } from '../src'
 
 const getRootNode = () => {
     document.body.innerHTML = '<div id="root"></div>'
@@ -34,33 +34,6 @@ describe('fiber reconcile test', () => {
             }
 
             render(<App />, $root)
-            expect($root).toMatchSnapshot()
-        })
-    })
-})
-
-describe('fiber hook test', () => {
-    describe('useState', () => {
-        test('init value', () => {
-            function Count({ count }) {
-                const [value] = useState(count)
-                return <div>{value}</div>
-            }
-
-            render(<Count count={1} />, $root)
-            expect($root).toMatchSnapshot()
-        })
-
-        test('dispatch with click event', () => {
-            function Count({ count }) {
-                const [value, setValue] = useState(count)
-
-                return <div id="counter" onClick={() => setValue(count + 1)}>{value}</div>
-            }
-
-            render(<Count count={1} />, $root)
-            const $counter = document.getElementById('counter')
-            $counter.click()
             expect($root).toMatchSnapshot()
         })
     })
