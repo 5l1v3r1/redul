@@ -109,6 +109,14 @@ function attachDomNodeAttrsAndEvents(domNode: HTMLElementOrText, props: ElementP
     }
 
     for (let attrName in attrs) {
+        // deal ref
+        if (attrName === 'ref') {
+            if (typeof attrs['ref'] === 'object') {
+                attrs['ref'].current = domNode
+            }
+            continue
+        }
+
         const nameAndValue = selectAttrNameAndValue(attrName, attrs[attrName])
         if (!nameAndValue) {
             continue

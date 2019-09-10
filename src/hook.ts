@@ -152,6 +152,19 @@ function updateUseCallback<T>(callback: T, deps?: any[] | null) {
     return hook.memoizedState![0]
 }
 
+// useRef
+function mountUseRef<T>(initValue: T) {
+    const hook = mountWorkInProgressHook<{current: T}>()
+    const ref = { current: initValue }
+    hook.memoizedState = ref
+    return ref
+}
+
+function updateUseRef<T>() {
+    const hook = updateWorkInProgressHook<{current: T}>()
+    return hook.memoizedState
+}
+
 function isEqualDeps(prevDeps: any[] | null, nextDeps: any[] | null) {
     prevDeps = prevDeps || []
     nextDeps = nextDeps || []
@@ -221,10 +234,19 @@ function useCallback<T>(callback: T, deps?: any[] | null) {
     return mountUseCallback(callback, deps)
 }
 
+function useRef<T>(initValue: T) {
+    if (isHookOnUpdateStage()) {
+        return updateUseRef()
+    }
+
+    return mountUseRef(initValue)
+}
+
 export {
     useState,
     useReducer,
     useEffect,
     useMemo,
-    useCallback
+    useCallback,
+    useRef
 }

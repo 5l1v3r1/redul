@@ -1,4 +1,4 @@
-import { render, createElement as h, useState, useReducer, useEffect, useCallback, useMemo } from '../src'
+import { render, createElement as h, useState, useReducer, useEffect, useCallback, useMemo, useRef } from '../src'
 
 const getRootNode = () => {
     document.body.innerHTML = '<div id="root"></div>'
@@ -178,4 +178,32 @@ describe('hook test', () => {
         })
     })
 
+    describe('useRef', () => {
+        test('init ref', () => {
+            function App() {
+                const ref = useRef(null)
+
+                return <div>{ref.current}</div>
+            }
+
+            render(<App />, $root)
+            expect($root).toMatchSnapshot()
+        })
+
+        test('get dom', () => {
+            function Count() {
+                const ref = useRef(null)
+
+                const onClick = useCallback((e) => {
+                    expect(ref.current).toBe(e.target)
+                }, [ref.current])
+
+                return <div ref={ref} id="counter" onClick={onClick}></div>
+            }
+
+            render(<Count count={1} />, $root)
+            const $counter = document.getElementById('counter')
+            $counter.click()
+        })
+    })
 })
