@@ -1,4 +1,4 @@
-import { render, createElement as h, useState, useReducer, useEffect } from '../src'
+import { render, createElement as h, useState, useReducer, useEffect, useCallback, useMemo } from '../src'
 
 const getRootNode = () => {
     document.body.innerHTML = '<div id="root"></div>'
@@ -113,4 +113,69 @@ describe('hook test', () => {
             expect($root).toMatchSnapshot()
         })
     })
+
+    describe('useMemo', () => {
+        test('value never change', () => {
+            function Count({ count }) {
+                const [value, setValue] = useState(count)
+                const result = useMemo(() => value, [])
+                useEffect(() => {
+                    setValue(count + 1)
+                }, [ count ])
+
+                return result
+            }
+
+            render(<Count count={1} />, $root)
+            expect($root).toMatchSnapshot()
+        })
+
+        test('value change', () => {
+            function Count({ count }) {
+                const [value, setValue] = useState(count)
+                const result = useMemo(() => value, [value])
+                useEffect(() => {
+                    setValue(count + 1)
+                }, [ count ])
+
+                return result
+            }
+
+            render(<Count count={1} />, $root)
+            expect($root).toMatchSnapshot()
+        })
+    })
+
+    describe('useCallback', () => {
+        test('value never change', () => {
+            function Count({ count }) {
+                const [value, setValue] = useState(count)
+                const fn = useCallback(() => value, [])
+                useEffect(() => {
+                    setValue(count + 1)
+                }, [ count ])
+
+                return fn()
+            }
+
+            render(<Count count={1} />, $root)
+            expect($root).toMatchSnapshot()
+        })
+
+        test('value change', () => {
+            function Count({ count }) {
+                const [value, setValue] = useState(count)
+                const fn = useCallback(() => value, [value])
+                useEffect(() => {
+                    setValue(count + 1)
+                }, [ count ])
+
+                return fn()
+            }
+
+            render(<Count count={1} />, $root)
+            expect($root).toMatchSnapshot()
+        })
+    })
+
 })

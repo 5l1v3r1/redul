@@ -18,8 +18,6 @@ const requestIdleCallback = (callback: (deadline: RequestIdleCallbackDeadline) =
 let nextUnitWork: FiberNode | null = null
 let workInProgressRootFiberNode: FiberNode | null = null
 
-// TODO: merge effects
-
 export function render(element: ElementInput, containerDom: HTMLElement) {
     // clear all before render
     dispatcher.clearDomContent(containerDom)
@@ -205,7 +203,6 @@ function transformElementToFiberNode(element: Element): FiberNode {
 }
 
 function resolveEffectTag(element: Element, alternateFiberNode: FiberNode | null): EffectTag {
-    // TODO: EffectTag no work
     if (alternateFiberNode) {
         if (element.type === alternateFiberNode.type) {
             if (element.props === alternateFiberNode.props) {

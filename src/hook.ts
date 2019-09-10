@@ -112,6 +112,46 @@ function updateUseEffect(create: () => (() => void) | void, deps?: any[]) {
     }
 }
 
+// useMemo
+function mountUseMemo<T>(nextCreate: () => T, deps?: any[] | null) {
+    const hook = mountWorkInProgressHook<[T, any[] | null]>()
+    const nextDeps = deps === undefined ? null : deps
+    const nextValue = nextCreate()
+    hook.memoizedState = [nextValue, nextDeps]
+    return nextValue
+}
+
+function updateUseMemo<T>(nextCreate: () => T, deps?: any[] | null) {
+    const hook = updateWorkInProgressHook<[T, any[] | null]>()
+    const nextDeps = deps === undefined ? null : deps
+    const [_, prevDeps] = hook.memoizedState!
+
+    if (!isEqualDeps(prevDeps, nextDeps))  {
+        const nextValue = nextCreate()
+        hook.memoizedState = [nextValue, nextDeps]
+    }
+    return hook.memoizedState![0]
+}
+
+// useCallback
+function mountUseCallback<T>(callback: T, deps?: any[] | null) {
+    const hook = mountWorkInProgressHook<[T, any[] | null]>()
+    const nextDeps = deps === undefined ? null : deps
+    hook.memoizedState = [callback, nextDeps]
+    return callback
+}
+
+function updateUseCallback<T>(callback: T, deps?: any[] | null) {
+    const hook = updateWorkInProgressHook<[T, any[] | null]>()
+    const nextDeps = deps === undefined ? null : deps
+    const [_, prevDeps] = hook.memoizedState!
+
+    if (!isEqualDeps(prevDeps, nextDeps)) {
+        hook.memoizedState = [callback, nextDeps]
+    }
+    return hook.memoizedState![0]
+}
+
 function isEqualDeps(prevDeps: any[] | null, nextDeps: any[] | null) {
     prevDeps = prevDeps || []
     nextDeps = nextDeps || []
@@ -165,9 +205,26 @@ function useEffect(create: () => (() => void) | void, deps?: any[]) {
     return mountUseEffect(create, deps)
 }
 
+function useMemo<T>(nextCreate: () => T, deps?: any[] | null) {
+    if (isHookOnUpdateStage()) {
+        return updateUseMemo(nextCreate, deps)
+    }
+
+    return mountUseMemo(nextCreate, deps)
+}
+
+function useCallback<T>(callback: T, deps?: any[] | null) {
+    if (isHookOnUpdateStage()) {
+        return updateUseCallback(callback, deps)
+    }
+
+    return mountUseCallback(callback, deps)
+}
 
 export {
     useState,
     useReducer,
-    useEffect
+    useEffect,
+    useMemo,
+    useCallback
 }

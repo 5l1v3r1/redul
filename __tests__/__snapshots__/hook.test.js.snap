@@ -1,5 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`hook test useCallback value change 1`] = `
+<div
+  id="root"
+>
+  2
+</div>
+`;
+
+exports[`hook test useCallback value never change 1`] = `
+<div
+  id="root"
+>
+  1
+</div>
+`;
+
 exports[`hook test useEffect complex set state 1`] = `
 <div
   id="root"
@@ -15,6 +31,22 @@ exports[`hook test useEffect set state 1`] = `
   id="root"
 >
   3
+</div>
+`;
+
+exports[`hook test useMemo value change 1`] = `
+<div
+  id="root"
+>
+  2
+</div>
+`;
+
+exports[`hook test useMemo value never change 1`] = `
+<div
+  id="root"
+>
+  1
 </div>
 `;
 
