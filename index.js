@@ -1,11 +1,11 @@
 'use strict'
 
-let Reax = null
+let Redul = null
 
 if (process.env.NODE_ENV === 'production') {
-    Reax = require('./build/reax.production')
+    Redul = require('./build/redul.production')
 } else {
-    Reax = require('./build/reax.development')
+    Redul = require('./build/redul.development')
 }
 
-module.exports = Reax.default || Reax
+module.exports = Redul.default || Redul

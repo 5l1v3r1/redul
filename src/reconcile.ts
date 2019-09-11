@@ -9,12 +9,13 @@ import { setWorkInProgressFiberNode, resetWorkInProgressHook } from './hook'
 
 let taskQueue: FiberNode[] = []
 
-const requestIdleCallback = (callback: (deadline: RequestIdleCallbackDeadline) => void) => {
+const requestIdleCallback = window.requestIdleCallback || ((callback: (deadline: RequestIdleCallbackDeadline) => void) => {
     callback({
         didTimeout: true,
         timeRemaining: () => 100
     })
-}
+})
+
 let nextUnitWork: FiberNode | null = null
 let workInProgressRootFiberNode: FiberNode | null = null
 

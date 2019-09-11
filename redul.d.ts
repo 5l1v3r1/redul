@@ -1,9 +1,9 @@
 import { ROOT_FIBER_NODE } from "./src/constants"
 import { FiberNodeTag, EffectTag } from "./interface"
 
-export = Reax
-export as namespace Reax
-declare namespace Reax {
+export = Redul
+export as namespace Redul
+declare namespace Redul {
     interface FunctionComponent<P = any> {
         (props: PropsWithChildren<P>): ElementInput
     }

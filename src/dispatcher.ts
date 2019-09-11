@@ -1,4 +1,4 @@
-import { FiberNode, ElementProps, HTMLElementOrText } from '../reax'
+import { FiberNode, ElementProps, HTMLElementOrText } from '../redul'
 import { EffectTag, FiberNodeTag } from '../interface'
 import { TEXT_ELEMENT_TYPE } from './constants';
 
@@ -6,7 +6,7 @@ const isEvent = (key: string) => /on\w+/.test(key)
 const computeEventName = (key: string) => key.replace(/^on/, '').toLowerCase() as keyof HTMLElementEventMap
 
 const dispatcher = {
-    render: (rootFiberNode: Reax.FiberNode) => {
+    render: (rootFiberNode: FiberNode) => {
         const effects = rootFiberNode.effects
         // console.log('render', effects.map(item => ([item.type, item.effectTag])))
 

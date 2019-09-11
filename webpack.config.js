@@ -8,9 +8,9 @@ module.exports = {
     entry: './src/index.ts',
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: `reax.${mode}.js`,
+        filename: `redul.${mode}.js`,
         publicPath: '/',
-        library: 'Reax',
+        library: 'Redul',
         libraryTarget: 'umd'
     },
     module: {

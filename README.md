@@ -1,4 +1,4 @@
-# Reax
+# Redul
 An simple and fast React alternative with hooks and fiber (Excluded class-component).
 
 ## Advantages

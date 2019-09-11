@@ -1,8 +1,8 @@
 {
-  "name": "reax",
+  "name": "redul",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/xwchris/reax.git",
+  "repository": "https://github.com/xwchris/redul.git",
   "author": "张晓伟 <zhangxiaowei.chris@bytedance.com>",
   "license": "MIT",
   "devDependencies": {
