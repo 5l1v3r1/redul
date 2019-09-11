@@ -14,3 +14,10 @@ An simple and fast React alternative with hooks and fiber (Excluded class-compon
 - useCallback
 - useMemo
 - useRef
+
+## TODO
+- implement `requestIdleCallback`
+- optimize remove
+- add priority and expireTime
+- optimize stage of update dom
+- add context
