@@ -1,4 +1,4 @@
-import { render, createElement as h, useState, useReducer, useEffect, useCallback, useMemo, useRef } from '../src'
+import { render, createElement as h, useState, useReducer, useEffect, useCallback, useMemo, useRef } from '../index'
 
 const getRootNode = () => {
     document.body.innerHTML = '<div id="root"></div>'

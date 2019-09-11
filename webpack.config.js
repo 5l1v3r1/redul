@@ -1,12 +1,17 @@
+'use strict'
+
 const path = require('path')
+const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development'
 
 module.exports = {
-    mode: 'development',
+    mode,
     entry: './src/index.ts',
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'bundle.js',
-        publicPath: '/'
+        filename: `reax.${mode}.js`,
+        publicPath: '/',
+        library: 'Reax',
+        libraryTarget: 'umd'
     },
     module: {
         rules: [
@@ -16,5 +21,8 @@ module.exports = {
             }
         ]
     },
-    devtool: 'source-map'
+    resolve: {
+        extensions: ['.ts', 'tsx', '.js', '.jsx', '.json', '.css']
+    },
+    devtool: mode === 'production' ? 'hidden-source-map' : 'cheap-module-eval-source-map'
 }

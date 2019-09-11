@@ -1,4 +1,4 @@
-import { render, createElement as h, useState, useReducer } from '../src'
+import { render, createElement as h } from '../index'
 
 const getRootNode = () => {
     document.body.innerHTML = '<div id="root"></div>'

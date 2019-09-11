@@ -2,7 +2,7 @@ import { createElement } from './element'
 import { render } from './reconcile'
 import { useState, useReducer, useEffect, useCallback, useMemo, useRef } from './hook'
 
-export {
+export default {
     createElement,
     render,
     useState,
