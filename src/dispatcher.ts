@@ -93,11 +93,33 @@ function createDomNode(type: string, props: ElementProps<any>) {
 
 function updateDomNode(domNode: HTMLElementOrText, prevProps: ElementProps<any>, nextProps: ElementProps<any>) {
     if (nextProps) {
-        if (prevProps) {
-            removeAllDomNodeAttrsAndEvents(domNode, prevProps)
-        }
-        attachDomNodeAttrsAndEvents(domNode, nextProps)
+        const { attachedProps, removedProps } = diffAndExtraProps(prevProps, nextProps)
+        removeAllDomNodeAttrsAndEvents(domNode, removedProps)
+        attachDomNodeAttrsAndEvents(domNode, attachedProps)
     }
+}
+
+function diffAndExtraProps(prevProps: ElementProps<any>, nextProps: ElementProps<any>) {
+    const nextPropsKeys = Object.keys(nextProps || {})
+    const prevPropsKeys = Object.keys(prevProps || {})
+    const attachedProps: ElementProps<any> = {}
+    const removedProps: ElementProps<any> = {}
+
+    for (let i = 0; i < nextPropsKeys.length; i++) {
+        const nextPropsKey = nextPropsKeys[i]
+        const shouldAttachPropsKey = (prevPropsKeys.indexOf(nextPropsKey) !== -1 && prevProps[nextPropsKey] !== nextProps[nextPropsKey]) || prevPropsKeys.indexOf(nextPropsKey) === -1
+        if (shouldAttachPropsKey) {
+            attachedProps[nextPropsKey] = nextProps[nextPropsKey]
+        }
+    }
+    for (let i = 0; i < prevPropsKeys.length; i++) {
+        const prevPropsKey = prevPropsKeys[i]
+        if (prevPropsKey in attachedProps) {
+            removedProps[prevPropsKey] = prevProps[prevPropsKey]
+        }
+    }
+
+    return { attachedProps, removedProps }
 }
 
 function attachDomNodeAttrsAndEvents(domNode: HTMLElementOrText, props: ElementProps<any>) {
