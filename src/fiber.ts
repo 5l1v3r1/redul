@@ -1,4 +1,4 @@
-import { FiberNode, ElementInput, RootHTMLElementWithFiberNode } from "../reax";
+import { FiberNode, ElementInput, RootHTMLElementWithFiberNode } from "../redul";
 import { FiberNodeTag } from '../interface'
 import { transformElementInputsToElements } from "./element";
 

@@ -1,5 +1,5 @@
-import { Hook, FiberNode, HookEffect } from "../reax";
-import { update } from './reconcile'
+import { Hook, FiberNode, HookEffect, UpdateQueue } from "../redul";
+import { scheduleUpdate } from './reconcile'
 
 let workInProgressHook: Hook | null = null
 let workInProgressFiberNode: FiberNode | null = null
@@ -27,7 +27,8 @@ function mountWorkInProgressHook<S>() {
     const hook: Hook<S> = {
         memoizedState: null,
         dispatch: null,
-        next: null
+        next: null,
+        update: false
     }
 
     if (workInProgressHook === null) {
@@ -190,7 +191,8 @@ function pushHookEffect(create: () => (() => void) | void, destroy: (() => void)
 function dispatchAction<S>(hook: Hook<S>, fiberNode: FiberNode | null, newState: S) {
     if (fiberNode) {
         hook.memoizedState = newState
-        update(fiberNode)
+        hook.update = true
+        scheduleUpdate(fiberNode)
     }
 }
 

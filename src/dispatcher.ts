@@ -94,6 +94,7 @@ function createDomNode(type: string, props: ElementProps<any>) {
 function updateDomNode(domNode: HTMLElementOrText, prevProps: ElementProps<any>, nextProps: ElementProps<any>) {
     if (nextProps) {
         const { attachedProps, removedProps } = diffAndExtraProps(prevProps, nextProps)
+
         removeAllDomNodeAttrsAndEvents(domNode, removedProps)
         attachDomNodeAttrsAndEvents(domNode, attachedProps)
     }
@@ -114,7 +115,7 @@ function diffAndExtraProps(prevProps: ElementProps<any>, nextProps: ElementProps
     }
     for (let i = 0; i < prevPropsKeys.length; i++) {
         const prevPropsKey = prevPropsKeys[i]
-        if (prevPropsKey in attachedProps) {
+        if ((prevPropsKey in attachedProps) || !(prevPropsKey in nextProps)) {
             removedProps[prevPropsKey] = prevProps[prevPropsKey]
         }
     }
@@ -146,7 +147,7 @@ function attachDomNodeAttrsAndEvents(domNode: HTMLElementOrText, props: ElementP
         const { name, value } = nameAndValue
         if (isHTMLElement(domNode)) {
             domNode.setAttribute(name, value)
-        } else if (value) {
+        } else if (name === 'nodeValue') {
             domNode.nodeValue = value
         }
     }
@@ -183,7 +184,7 @@ function removeAllDomNodeAttrsAndEvents(domNode: HTMLElementOrText, props: Eleme
     for (let attrName in attrs) {
         if (isHTMLElement(domNode)) {
             domNode.removeAttribute(attrName)
-        } else {
+        } else if (attrName === 'nodeValue') {
             domNode.nodeValue = ''
         }
     }
@@ -201,8 +202,6 @@ function selectAttrNameAndValue(key: string, originValue: any) {
         value = Object.keys(value).map(key => `${key}: ${value[key]}`).join(';')
     } else if (key === 'children') {
         return null
-    } else {
-        name = name.toLowerCase()
     }
 
     return { name, value }

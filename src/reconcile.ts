@@ -3,13 +3,13 @@ import { ENOUGH_TIME, ROOT_FIBER_NODE } from './constants'
 import dispatcher from './dispatcher'
 import { isComponent } from './utils'
 import { transformElementInputsToElements } from './element'
-import { FiberNode, ElementInput, FunctionComponent, Element, RootHTMLElementWithFiberNode } from '../reax'
+import { FiberNode, ElementInput, FunctionComponent, Element, RootHTMLElementWithFiberNode } from '../redul'
 import { EffectTag, FiberNodeTag } from '../interface'
 import { setWorkInProgressFiberNode, resetWorkInProgressHook } from './hook'
 
 let taskQueue: FiberNode[] = []
 
-const requestIdleCallback = window.requestIdleCallback || ((callback: (deadline: RequestIdleCallbackDeadline) => void) => {
+const requestIdleCallback = ((callback: (deadline: RequestIdleCallbackDeadline) => void) => {
     callback({
         didTimeout: true,
         timeRemaining: () => 100
@@ -29,17 +29,12 @@ export function render(element: ElementInput, containerDom: HTMLElement) {
     return containerDom
 }
 
-export function update(fiberNode: FiberNode) {
-    fiberNode.isPartialStateChanged = true
-    const oldRootFiberNode = workInProgressRootFiberNode
-    if (oldRootFiberNode) {
-        const rootFiberNode = createWorkInProgressRootFiberNode(oldRootFiberNode)
-        taskQueue.push(rootFiberNode)
+export function scheduleUpdate(fiberNode: FiberNode) {
+    taskQueue.push(fiberNode)
 
-        // when no task in process, start work
-        if (!nextUnitWork) {
-            requestIdleCallback(performWork)
-        }
+    // when no work in progress, start immediately
+    if (!nextUnitWork) {
+        requestIdleCallback(performWork)
     }
 }
 
@@ -59,7 +54,6 @@ function performWork(deadline: RequestIdleCallbackDeadline) {
 
 function resolveNextUnitWork() {
     nextUnitWork = nextUnitWork || flushTaskQueue() || null
-
     // update work-in-progress root fiber
     if (nextUnitWork && nextUnitWork.tag === FiberNodeTag.HOST_ROOT_NODE) {
         workInProgressRootFiberNode = nextUnitWork
@@ -69,12 +63,21 @@ function resolveNextUnitWork() {
 }
 
 function flushTaskQueue() {
-    // flush taskQueue and use last task as next task
-    // all the current tasks should be merge as one task because they has same root fiber node
-    const task = taskQueue.shift()
-    taskQueue.length = 0
+    const currentFiberNode = taskQueue.shift() || null
+    let rootFiberNode: FiberNode | null = null
 
-    return task
+    // every update should start from a rootFiberNode
+    if (currentFiberNode && currentFiberNode.tag === FiberNodeTag.COMPONENT_NODE) {
+        currentFiberNode.isPartialStateChanged = true
+
+        if (workInProgressRootFiberNode) {
+            rootFiberNode = createWorkInProgressRootFiberNode(workInProgressRootFiberNode)
+        }
+    } else {
+        rootFiberNode = currentFiberNode
+    }
+
+    return rootFiberNode
 }
 
 function commitAllWork() {
@@ -117,6 +120,7 @@ function beginComponentNodeUnitWork(fiberNode: FiberNode) {
     const alternateFiberNode = fiberNode.alternate
 
     // TODO: judge props whether equal
+    console.log(fiberNode.type, alternateFiberNode && alternateFiberNode.isPartialStateChanged, alternateFiberNode && alternateFiberNode.props === fiberNode.props, alternateFiberNode && alternateFiberNode.props, fiberNode.props)
     if (alternateFiberNode && alternateFiberNode.props === fiberNode.props && !alternateFiberNode.isPartialStateChanged) {
         cloneChildFiberNodes(fiberNode)
         // reset update tag

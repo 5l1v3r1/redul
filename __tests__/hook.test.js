@@ -1,4 +1,5 @@
-import { render, createElement as h, useState, useReducer, useEffect, useCallback, useMemo, useRef } from '../index'
+import Redul from '../src/index'
+const { render, useState, useReducer, useEffect, useCallback, useMemo, useRef } = Redul
 
 const getRootNode = () => {
     document.body.innerHTML = '<div id="root"></div>'
@@ -90,7 +91,6 @@ describe('hook test', () => {
             function Count({ count }) {
                 const [value, setValue] = useState(count)
                 useEffect(() => {
-                    // console.log('count', count)
                     setValue(count + 2)
                 }, [count])
 

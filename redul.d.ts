@@ -59,6 +59,7 @@ declare namespace Redul {
         memoizedState: S | null,
         dispatch: ((action: A) => void) | null
         next: Hook | null
+        update: boolean
     }
 
     interface HookEffect {

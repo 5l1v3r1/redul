@@ -1,4 +1,5 @@
-import { render, createElement as h } from '../index'
+import Redul from '../src/index'
+const { render} = Redul
 
 const getRootNode = () => {
     document.body.innerHTML = '<div id="root"></div>'

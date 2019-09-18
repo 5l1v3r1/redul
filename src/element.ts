@@ -1,6 +1,6 @@
 import { isBoolean, arraify } from "./utils";
 import { TEXT_ELEMENT_TYPE } from './constants'
-import { ElementType, ElementInput, Element, ElementProps } from '../reax'
+import { ElementType, ElementInput, Element, ElementProps } from '../redul'
 
 // create element node
 export function createElement(type: ElementType, initProps: ElementProps, ...args: ElementInput[]): Element {

@@ -1,4 +1,4 @@
-import { FunctionComponent } from "../reax";
+import { FunctionComponent } from "../redul";
 
 export function isBoolean(value: unknown): value is boolean {
     return typeof value === 'boolean'
